@@ -2,19 +2,13 @@
 
 ![Event Banner](./assets/banner.png)
 
-# Title: [Insert Project Name]
+# Title: Email Expense Tracker
 
 ---
 
 ### Team Members
 
 - **Member 1:** Akhileswaran K.R.
-
----
-
-### Link to product walkthrough
-
-[Insert Link to Video (YouTube/Drive)]
 
 ---
 
@@ -39,7 +33,7 @@ The Smart Email Expense Tracker automatically reads expense-related emails and c
 
 #### 2. Embed video of project demo
 
-[Insert link to Video (Youtube/Drive)]
+[Email Expense Tracker](https://drive.google.com/file/d/107e0mLeXGIeYj8q7Kv8_cNF-wtPTgPgt/view?usp=sharing)
 
 ---
 
