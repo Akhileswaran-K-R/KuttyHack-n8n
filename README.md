@@ -33,7 +33,7 @@ The Smart Email Expense Tracker automatically reads expense-related emails and c
 
 #### 2. Embed video of project demo
 
-[Email Expense Tracker](https://drive.google.com/file/d/107e0mLeXGIeYj8q7Kv8_cNF-wtPTgPgt/view?usp=sharing)
+[Email Expense Tracker](https://drive.google.com/file/d/1NdYwMh3gNRi98B-fBg51Dwgb47GX4gJM/view?usp=sharing)
 
 ---
 
