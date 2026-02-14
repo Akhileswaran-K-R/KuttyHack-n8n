@@ -1,0 +1,613 @@
+{
+  "name": "Email Expense Tracker",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "customEmailConfig": "[\"UNSEEN\",[\"SUBJECT\", \"ATM/IMPS/UPI Transaction Alert\"]]"
+        }
+      },
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e074bd4a-e9ea-4c51-a303-6fe81ce748bf",
+      "name": "Email Trigger (IMAP)",
+      "credentials": {
+        "imap": {
+          "id": "wVINXBSN89cS5w1X",
+          "name": "IMAP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const emailText = $json.textPlain;\n\n// Extract Amount\nconst amountMatch = emailText.match(/INR\\s([\\d.]+)/);\n\n// Extract Transaction Type (DEBITED / CREDITED)\nconst typeMatch = emailText.match(/has been\\s(\\w+)/);\n\n// Extract Account Number (last digits)\nconst accountMatch = emailText.match(/account\\sXXX(\\d+)/);\n\n// Extract Date\nconst dateMatch = emailText.match(/on\\r\\n(\\d{2}\\/\\d{2}\\/\\d{4})/);\n\nreturn [\n  {\n    json: {\n      bank: \"Canara Bank\",\n      date: dateMatch ? dateMatch[1] : \"\",\n      amount: amountMatch ? amountMatch[1] : \"\",\n      type: typeMatch ? typeMatch[1] : \"\",\n      account_last_digits: accountMatch ? accountMatch[1] : \"\"\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "5ed2bf08-3e22-4a95-8fc4-93788908a75a",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1REA94wZNY5n-IAPG_uNHijO0MFYQ0MBp4bTbWtF5-GM",
+          "mode": "list",
+          "cachedResultName": "Email expense tracker",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1REA94wZNY5n-IAPG_uNHijO0MFYQ0MBp4bTbWtF5-GM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1REA94wZNY5n-IAPG_uNHijO0MFYQ0MBp4bTbWtF5-GM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "bank",
+              "displayName": "bank",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "amount",
+              "displayName": "amount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "account_last_digits",
+              "displayName": "account_last_digits",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        416,
+        0
+      ],
+      "id": "731db16b-8ce9-4ab3-810f-e6abb9713c85",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VJPBHndECJXz8CCM",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -240,
+        480
+      ],
+      "id": "5c5fd318-238b-410b-8167-18cbac5de0be",
+      "name": "Telegram Trigger",
+      "webhookId": "2266420a-e4a9-416d-a864-c0eb41df448b",
+      "credentials": {
+        "telegramApi": {
+          "id": "DIyjn80thBvSsO5v",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1REA94wZNY5n-IAPG_uNHijO0MFYQ0MBp4bTbWtF5-GM",
+          "mode": "list",
+          "cachedResultName": "Email expense tracker",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1REA94wZNY5n-IAPG_uNHijO0MFYQ0MBp4bTbWtF5-GM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1REA94wZNY5n-IAPG_uNHijO0MFYQ0MBp4bTbWtF5-GM/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        304,
+        240
+      ],
+      "id": "fe0b8358-30d8-46ac-8794-d92626b94b07",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VJPBHndECJXz8CCM",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nlet total = 0;\n\nitems.forEach((item) => {\n  total += parseFloat(item.json.amount);\n});\n\nreturn [\n  {\n    json: {\n       message: `💰 Total Expense: ₹${total.toFixed(2)}`\n    },\n  },\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        528,
+        240
+      ],
+      "id": "ef3fc9c1-c320-4fe3-b57a-f3dff5c5fbac",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.chartUrl }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        736,
+        480
+      ],
+      "id": "5923ca58-a3c3-4ef7-b63d-bfd24485ed41",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "text": "={{ $json.message }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        736,
+        240
+      ],
+      "id": "014ed2d0-e48c-4665-89d7-009bec73fdc3",
+      "name": "Send a text message",
+      "webhookId": "107fae91-989b-498e-bbb6-418cc7c2ae3b",
+      "credentials": {
+        "telegramApi": {
+          "id": "DIyjn80thBvSsO5v",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/total",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "84dd560a-1168-49fa-8622-649aca1f9f55"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "59e693da-59ea-49b1-8b60-78164200e79c",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/monthly",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "a8db3ccf-9024-43b8-bbcd-a6415dfc0d5b",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/summary",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -32,
+        464
+      ],
+      "id": "8eaaf234-2f46-4ff0-aeb1-6ca410d76157",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1REA94wZNY5n-IAPG_uNHijO0MFYQ0MBp4bTbWtF5-GM",
+          "mode": "list",
+          "cachedResultName": "Email expense tracker",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1REA94wZNY5n-IAPG_uNHijO0MFYQ0MBp4bTbWtF5-GM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1REA94wZNY5n-IAPG_uNHijO0MFYQ0MBp4bTbWtF5-GM/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        304,
+        480
+      ],
+      "id": "ccaf583c-ffdc-46c8-ba42-c9d049c558b9",
+      "name": "Get row(s) in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VJPBHndECJXz8CCM",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n// Group totals by month\nconst monthlyTotals = {};\n\nitems.forEach(item => {\n  const date = item.json.date;  // Make sure column name matches exactly\n  const amount = parseFloat(item.json.amount);\n\n  if (!date || isNaN(amount)) return;\n\n  // Date format assumed: DD/MM/YYYY\n  const parts = date.split(\"/\");\n  const monthYear = parts[1] + \"/\" + parts[2];  // MM/YYYY\n\n  if (!monthlyTotals[monthYear]) {\n    monthlyTotals[monthYear] = 0;\n  }\n\n  monthlyTotals[monthYear] += amount;\n});\n\n// Convert to arrays\nconst labels = Object.keys(monthlyTotals);\nconst data = Object.values(monthlyTotals);\n\n// Generate QuickChart URL\nconst chartConfig = {\n  type: 'bar',\n  data: {\n    labels: labels,\n    datasets: [{\n      label: 'Monthly Expenses',\n      data: data\n    }]\n  }\n};\n\nconst chartUrl = `https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(chartConfig))}`;\n\nreturn [{\n  json: {\n    chartUrl: chartUrl\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        528,
+        480
+      ],
+      "id": "f9d5872f-445c-491f-b6ec-fe1f305bd670",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1REA94wZNY5n-IAPG_uNHijO0MFYQ0MBp4bTbWtF5-GM",
+          "mode": "list",
+          "cachedResultName": "Email expense tracker",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1REA94wZNY5n-IAPG_uNHijO0MFYQ0MBp4bTbWtF5-GM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1REA94wZNY5n-IAPG_uNHijO0MFYQ0MBp4bTbWtF5-GM/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        304,
+        720
+      ],
+      "id": "6e1b2d7d-c107-402c-8f39-dc3c7337195a",
+      "name": "Get row(s) in sheet2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VJPBHndECJXz8CCM",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "file": "={{ $json.chartUrl }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        944,
+        480
+      ],
+      "id": "85106620-d871-4e0e-a870-43e8c8703185",
+      "name": "Send a photo message",
+      "webhookId": "69ede28a-0290-46d8-8b42-ded58161f96d",
+      "credentials": {
+        "telegramApi": {
+          "id": "DIyjn80thBvSsO5v",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nlet total = 0;\nlet transactionCount = 0;\nconst monthlyTotals = {};\n\nitems.forEach(item => {\n  const date = item.json.date;\n  const amount = parseFloat(item.json.amount);\n\n  if (!date || isNaN(amount)) return;\n\n  total += amount;\n  transactionCount++;\n\n  // Extract month/year\n  const parts = date.split(\"/\");\n  const monthYear = parts[1] + \"/\" + parts[2];\n\n  if (!monthlyTotals[monthYear]) {\n    monthlyTotals[monthYear] = 0;\n  }\n\n  monthlyTotals[monthYear] += amount;\n});\n\n// Current month\nconst now = new Date();\nconst currentMonth = String(now.getMonth() + 1).padStart(2, '0');\nconst currentYear = now.getFullYear();\nconst currentMonthKey = `${currentMonth}/${currentYear}`;\nconst thisMonthTotal = monthlyTotals[currentMonthKey] || 0;\n\n// Highest spending month\nlet highestMonth = null;\nlet highestAmount = 0;\n\nfor (const [month, amount] of Object.entries(monthlyTotals)) {\n  if (amount > highestAmount) {\n    highestAmount = amount;\n    highestMonth = month;\n  }\n}\n\n// Build message\nconst summaryMessage = `\n📊 Expense Summary\n\n💰 Total: ₹${total.toFixed(2)}\n📅 This Month: ₹${thisMonthTotal.toFixed(2)}\n📈 Highest Month: ${highestMonth || \"N/A\"} (₹${highestAmount.toFixed(2)})\n🔢 Transactions: ${transactionCount}\n`;\n\nreturn [{\n  json: {\n    messageText: summaryMessage\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        528,
+        720
+      ],
+      "id": "d146e8f4-d63d-42db-9a02-4647a01241ca",
+      "name": "Code in JavaScript3"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "text": "={{ $json.messageText }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        736,
+        720
+      ],
+      "id": "6fbdd368-922c-49d2-95ef-f2ca3363046a",
+      "name": "Send a text message1",
+      "webhookId": "107fae91-989b-498e-bbb6-418cc7c2ae3b",
+      "credentials": {
+        "telegramApi": {
+          "id": "DIyjn80thBvSsO5v",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Email Trigger (IMAP)": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message": {
+      "main": [
+        []
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get row(s) in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Send a photo message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet2": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript3": {
+      "main": [
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "06b8a127-d2e3-4585-bb80-ac043deb5e6d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5ad56efdb505b611b313a1a48254947fae112effba93511b1877fe3d27f0248a"
+  },
+  "id": "bPS6JY30ROQWD6Mm",
+  "tags": []
+}

@@ -7,12 +7,13 @@
 ---
 
 ### Team Members
-* **Member 1:** [Name / GitHub Link]
-* **Member 2:** [Name / GitHub Link]
+
+- **Member 1:** Akhileswaran K.R.
 
 ---
 
 ### Link to product walkthrough
+
 [Insert Link to Video (YouTube/Drive)]
 
 ---
@@ -20,27 +21,36 @@
 ### How it Works?
 
 #### 1. Explaining the working of project
-[Describe the logic here.]
+
+The Smart Email Expense Tracker automatically reads expense-related emails and converts them into structured expense records.
+
+1. Gmail Trigger monitors inbox for new emails.
+2. Filters emails with keyword "transaction"
+3. Extracts key details:
+   - Amount
+   - Date
+   - Bank
+   - Type
+4. Saves extracted data into:
+   - Google Sheets
+5. Generates total expense/monthly expenses/summary according to user request through telegram
+
+---
 
 #### 2. Embed video of project demo
+
 [Insert link to Video (Youtube/Drive)]
 
 ---
 
-### Libraries
-[Mention the Libraries/Tools Used.]
+## 🛠 Tech Stack / Tools Used
 
----
+### Automation
 
-### How to configure
-[Explain How to configue.]
+- n8n (Workflow Automation)
 
----
+### Integrations
 
-### How to run
-[Explain How to run.]
-
----
-
-### Running the App
-[Running the App on differnet devices.]
+- Gmail API
+- Google Sheets API
+- Telegram Bot API
